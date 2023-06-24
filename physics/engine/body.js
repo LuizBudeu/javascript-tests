@@ -2,30 +2,39 @@
 
 class Body extends Rect {
     constructor(
-        x,
-        y,
-        width,
-        height,
-        color = "blue",
-        velX = 0,
-        velY = 0,
-        accX = 0,
-        accY = 0
+        rect,
+        initialVelComponents = [0, 0],
+        initialAccComponents = [0, 0],
+        mass = 1,
+        gravity = GRAVITY
     ) {
-        super(x, y, width, height, color);
-        this.velX = velX;
-        this.velY = velY;
-        this.accX = accX;
-        this.accY = accY;
+        super(rect.x, rect.y, rect.width, rect.height, rect.color);
+        this.velX = initialVelComponents[0];
+        this.velY = initialVelComponents[1];
+        this.accX = initialAccComponents[0];
+        this.accY = initialAccComponents[1];
+        this.mass = mass;
+        this.gravity = gravity;
+
+        this.isCollidingWithFloor = false;
+        this.finalVelocities = [0, 0];
     }
 
     update() {
-        this.accY += GRAVITY;
+        this.accY += this.gravity;
         this.velY += this.accY;
         this.velX += this.accX;
 
         this.x += this.velX;
         this.y += this.velY;
+
+        if (!this.isCollidingWithFloor) {
+            this.finalVelocities = [this.velX, this.velY];
+        }
+
+        this.handleFloorCollision(canvas.height);
+
+        this.updateElapsedTime();
     }
 
     drawWithVelocity(context) {
@@ -88,9 +97,32 @@ class Body extends Rect {
 
     handleFloorCollision(floorY) {
         if (this.y + this.height >= floorY) {
-            this.vy = 0;
+            this.isCollidingWithFloor = true;
+
+            this.velY = 0;
             this.y = floorY - this.height;
+
+            this.setFinalVelocityText();
         }
+    }
+
+    updateElapsedTime() {
+        // TODO if game is paused, don't update elapsed time
+        if (!this.isCollidingWithFloor) {
+            const endTime = Date.now();
+            const elapsedTime = (endTime - startTime) / 1000;
+            const timerElement = document.getElementById("timer");
+            timerElement.textContent = `Elapsed Time: ${elapsedTime.toFixed(
+                3
+            )} seconds`;
+        }
+    }
+
+    setFinalVelocityText() {
+        const finalVelocityElement = document.getElementById("finalVelocity");
+        finalVelocityElement.textContent = `Final Velocity: [${this.finalVelocities.map(
+            (v) => v.toFixed(3)
+        )}]`;
     }
 }
 
