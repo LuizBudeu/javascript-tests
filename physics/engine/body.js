@@ -9,10 +9,8 @@ class Body extends Rect {
         gravity = GRAVITY
     ) {
         super(rect.x, rect.y, rect.width, rect.height, rect.color);
-        this.velX = initialVelComponents[0];
-        this.velY = initialVelComponents[1];
-        this.accX = initialAccComponents[0];
-        this.accY = initialAccComponents[1];
+        [this.velX, this.velY] = initialVelComponents;
+        [this.accX, this.accY] = initialAccComponents;
         this.mass = mass;
         this.gravity = gravity;
 
@@ -45,35 +43,37 @@ class Body extends Rect {
     displayVelocity(context) {
         const arrowSize = 10;
 
-        // Draw arrow line
-        context.beginPath();
-        context.moveTo(this.x + this.width / 2, this.y + this.height / 2);
-        context.lineTo(
-            this.x + this.width / 2 + this.velX * arrowSize,
-            this.y + this.height / 2 + this.velY * arrowSize
-        );
-        context.strokeStyle = "black";
-        context.lineWidth = 2;
-        context.stroke();
+        if (this.velX !== 0 || this.velY !== 0) {
+            // Draw arrow line
+            context.beginPath();
+            context.moveTo(this.x + this.width / 2, this.y + this.height / 2);
+            context.lineTo(
+                this.x + this.width / 2 + this.velX * arrowSize,
+                this.y + this.height / 2 + this.velY * arrowSize
+            );
+            context.strokeStyle = "black";
+            context.lineWidth = 2;
+            context.stroke();
 
-        // Draw arrowhead
-        const angle = Math.atan2(this.velY, this.velX);
-        context.save();
-        context.translate(
-            this.x + this.width / 2 + this.velX * arrowSize,
-            this.y + this.height / 2 + this.velY * arrowSize
-        );
-        context.rotate(angle);
+            // Draw arrowhead
+            const angle = Math.atan2(this.velY, this.velX);
+            context.save();
+            context.translate(
+                this.x + this.width / 2 + this.velX * arrowSize,
+                this.y + this.height / 2 + this.velY * arrowSize
+            );
+            context.rotate(angle);
 
-        context.beginPath();
-        context.moveTo(0, 0);
-        context.lineTo(-arrowSize, -arrowSize / 2);
-        context.lineTo(-arrowSize, arrowSize / 2);
-        context.closePath();
-        context.fillStyle = "black";
-        context.fill();
+            context.beginPath();
+            context.moveTo(0, 0);
+            context.lineTo(-arrowSize, -arrowSize / 2);
+            context.lineTo(-arrowSize, arrowSize / 2);
+            context.closePath();
+            context.fillStyle = "black";
+            context.fill();
 
-        context.restore();
+            context.restore();
+        }
 
         // Display velocity text
         context.font = "12px Arial";
@@ -113,8 +113,8 @@ class Body extends Rect {
             const elapsedTime = (endTime - startTime) / 1000;
             const timerElement = document.getElementById("timer");
             timerElement.textContent = `Elapsed Time: ${elapsedTime.toFixed(
-                3
-            )} seconds`;
+                1
+            )} seconds (${elapsedTime.toFixed(3)})`;
         }
     }
 
