@@ -46,8 +46,8 @@ function start() {
 
     body = new Body(
         new Rect(100, 250, 50, 50, "blue"),
-        (initialVel = [0, 0]),
-        (initialAcc = [0, 0]),
+        (initialVel = [1, -1]),
+        (initialAcc = [-0.001, 0]),
         (mass = 1),
         GRAVITY
     );

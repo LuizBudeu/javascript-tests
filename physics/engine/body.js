@@ -30,7 +30,7 @@ class Body extends Rect {
             this.finalVelocities = [this.velX, this.velY];
         }
 
-        this.handleFloorCollision(canvas.height);
+        this.handleFloorCollision(canvas.height - 5);
 
         this.updateElapsedTime();
     }
@@ -51,7 +51,7 @@ class Body extends Rect {
                 this.x + this.width / 2 + this.velX * arrowSize,
                 this.y + this.height / 2 + this.velY * arrowSize
             );
-            context.strokeStyle = "black";
+            context.strokeStyle = "orange";
             context.lineWidth = 2;
             context.stroke();
 
@@ -69,7 +69,7 @@ class Body extends Rect {
             context.lineTo(-arrowSize, -arrowSize / 2);
             context.lineTo(-arrowSize, arrowSize / 2);
             context.closePath();
-            context.fillStyle = "black";
+            context.fillStyle = "orange";
             context.fill();
 
             context.restore();
