@@ -7,11 +7,12 @@ let body;
 let isPaused;
 // let justUnpaused;  // TODO if game is paused, don't update elapsed time
 let startTime;
+let deltaTime;
 
 // FPS counter
 let frameCount = 0;
 let fps = 0;
-let lastTime = performance.now();
+let FPSLastTime = performance.now();
 
 const restartButton = document.getElementById("RestartButton");
 restartButton.addEventListener("click", () => {
@@ -36,8 +37,9 @@ function start() {
     finalVelocityElement.textContent = `Final Velocity: []`;
 
     const gravityInput = document.getElementById("gravityInput");
-    GRAVITY = parseFloat(gravityInput.value);
-    GRAVITY = parseFloat(gravityInput.value) * 0.000096402;
+    // GRAVITY = parseFloat(gravityInput.value);
+    // GRAVITY = parseFloat(gravityInput.value) * 0.000096402;
+    GRAVITY = 0.71856 * 0.0167;  // gravity in 60 fps should be 0.012 px / frame^2
     convertedGravity.textContent = `(${GRAVITY} px/frame^2)`;
 
     // GRAVITY = parseFloat(gravityInput.value) * 0.00096402;
@@ -46,7 +48,7 @@ function start() {
 
     body = new Body(
         new Rect(100, 250, 50, 50, "blue"),
-        (initialVel = [1, -1]),
+        (initialVel = [1, 0]),
         (initialAcc = [-0.001, 0]),
         (mass = 1),
         GRAVITY
@@ -56,12 +58,16 @@ function start() {
     startTime = Date.now();
     frameCount = 0;
     fps = 0;
-    lastTime = performance.now();
+    FPSLastTime = performance.now();
+    previousTime = performance.now();
 }
 
 function update() {
     // FPS counter
     const currentTime = performance.now();
+    deltaTime = (currentTime - previousTime) / 1000;
+    previousTime = currentTime;
++
     frameCount++;
 
     if (isPaused) {
@@ -76,7 +82,7 @@ function update() {
 
     context.clearRect(0, 0, canvas.width, canvas.height);
 
-    core.drawGraph();
+    UI.drawGraph();
 
     core.update();
 
@@ -89,10 +95,10 @@ function update() {
     requestAnimationFrame(update);
 
     // FPS counter
-    if (currentTime - lastTime >= 1000) {
+    if (currentTime - FPSLastTime >= 1000) {
         fps = frameCount;
         frameCount = 0;
-        lastTime = currentTime;
+        FPSLastTime = currentTime;
         console.log(`FPS: ${fps}`);
 
         const fpsCounter = document.getElementById("fpsCounter");

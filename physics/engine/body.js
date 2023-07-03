@@ -20,6 +20,11 @@ class Body extends Rect {
 
     update() {
         this.accY += this.gravity;
+        // this.velY += this.accY * deltaTime;
+        // this.velX += this.accX * deltaTime;
+
+        // this.x += this.velX * deltaTime;
+        // this.y += this.velY * deltaTime;
         this.velY += this.accY;
         this.velX += this.accX;
 
