@@ -2,13 +2,14 @@ class Core {
     constructor(canvas, context) {
         this.canvas = canvas;
         this.context = context;
-        this.allSpaces = []
+        this.allSpaces = [];
+        this.MATRIX = [[]];
     }
 
     update() {
-        this.allBodies.forEach((body) => {
-            body.update();
-        });
+        // this.allBodies.forEach((body) => {
+        //     body.update();
+        // });
     }
 
     render() {
@@ -21,23 +22,28 @@ class Core {
         this.allBodies = [];
     }
 
-    addBody(body) {
-        this.allBodies.push(body);
-    }
+    // addBody(body) {
+    //     this.allBodies.push(body);
+    // }
 
-    removeBody(body) {
-        this.allBodies = this.allBodies.filter((b) => b !== body);
-    }
+    // removeBody(body) {
+    //     this.allBodies = this.allBodies.filter((b) => b !== body);
+    // }
 
     createAllSpaces() {
-        const pixelOffset = 1;
-        const rectSize = 10;
-        for(let x = pixelOffset; x + rectSize + pixelOffset <= this.canvas.width; x += rectSize + pixelOffset){
-            for(let y = pixelOffset; y + rectSize + pixelOffset <= this.canvas.height; y += rectSize + pixelOffset){
-                rect = new Rect(x, y, 10, 10, "white");
-                this.allSpaces.push(rect);
+        for (
+            let x = pixelOffset;
+            x + rectSize + pixelOffset <= this.canvas.width;
+            x += rectSize + pixelOffset
+        ) {
+            for (
+                let y = pixelOffset;
+                y + rectSize + pixelOffset <= this.canvas.height;
+                y += rectSize + pixelOffset
+            ) {
+                this.allSpaces.push(new Space(x, y, 10, 10, "white"));
             }
         }
+        this.MATRIX = arrayToMatrix(this.allSpaces, N_ROWS, N_COLS);
     }
-
 }

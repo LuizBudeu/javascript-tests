@@ -11,9 +11,11 @@ let frameCount = 0;
 let fps = 0;
 let lastTime = performance.now();
 
-let rect = new Rect(
-    1, 1, 10, 10, "white"
-)
+const pixelOffset = 1;
+const rectSize = 10;
+
+const N_ROWS = 90;
+const N_COLS = 72;
 
 const restartButton = document.getElementById("RestartButton");
 restartButton.addEventListener("click", () => {
@@ -38,16 +40,15 @@ function start() {
     core.reset();
 
     core.createAllSpaces();
-    console.log(core.allSpaces)
 
-    core.addBody(rect);
-
+    // core.MATRIX[50][50] = new Sand()  # TODO attribute particles to MATRIX indexes, not canvas positions
 }
 
 function update() {
     // FPS counter
     const currentTime = performance.now();
     frameCount++;
+    UI.updateFPSCounter(currentTime);
 
     if (isPaused) {
         requestAnimationFrame(update);
@@ -61,16 +62,6 @@ function update() {
     core.render(context);
 
     requestAnimationFrame(update);
-
-    // FPS counter
-    if (currentTime - lastTime >= 1000) {
-        fps = frameCount;
-        frameCount = 0;
-        lastTime = currentTime;
-
-        const fpsCounter = document.getElementById("fpsCounter");
-        fpsCounter.textContent = `FPS: ${fps}`;
-    }
 }
 
 start();
